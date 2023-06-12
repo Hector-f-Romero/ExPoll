@@ -2,7 +2,13 @@
 export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				"main-card": "#1D2733",
+				"primary-button": "#0072EE",
+				"hover-primary-button": "#208AFA",
+			},
+		},
 	},
-	plugins: [],
+	plugins: [require("tailwindcss-animated")],
 };
