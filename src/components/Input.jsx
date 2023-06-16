@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Input = ({ label, placeholder, register, name, minLength, required, maxLength, errors }) => {
 	return (
 		<>
-			<label htmlFor="" className="font-medium">
+			<label htmlFor={name} className="font-medium text-sm md:text-xl">
 				{label}
 			</label>
 			<input
@@ -24,9 +24,11 @@ const Input = ({ label, placeholder, register, name, minLength, required, maxLen
 						message: maxLength?.message,
 					},
 				})}
-				className="w-full my-2 px-3 py-2 text-gray-500 bg-gray-700 outline-none border border-neutral-600 focus:border-neutral-300 shadow-sm rounded-lg"
+				className="w-full my-2 px-3 py-2 text-gray-200 bg-gray-700 outline-none border border-neutral-600 focus:border-neutral-300 shadow-sm rounded-lg text-sm md:text-base"
 			/>
-			{errors && <span className=" my-1 block text-red-500 font-semibold">{errors.message}</span>}
+			{errors && (
+				<span className=" my-1 block text-red-500 font-semibold text-sm md:text-base">{errors.message}</span>
+			)}
 		</>
 	);
 };
@@ -38,8 +40,8 @@ Input.propTypes = {
 	name: PropTypes.string.isRequired,
 	minLength: PropTypes.object,
 	maxLength: PropTypes.object,
-	required: PropTypes.object.isRequired,
-	errors: PropTypes.object,
+	required: PropTypes.object,
+	errors: PropTypes.any,
 };
 
 export default Input;

@@ -1,17 +1,21 @@
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
 	const formWithoutAuth = useForm();
 	const formLogin = useForm();
+	const navigate = useNavigate();
 
 	const onSubmitWithoutAuth = (data) => {
 		console.log(data);
+		navigate("/create");
 	};
 
 	const onSubmitLogin = (data) => {
 		console.log("Log in");
 		console.log(data);
+		navigate("/create");
 	};
 
 	return (
