@@ -18,6 +18,10 @@ const pollSchema = new Schema(
 			default: false,
 			required: false,
 		},
+		verified: {
+			type: Boolean,
+			default: false,
+		},
 		options: [
 			{
 				type: Schema.Types.ObjectId,

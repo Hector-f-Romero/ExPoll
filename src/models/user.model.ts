@@ -1,12 +1,22 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, InferSchemaType } from "mongoose";
 
-const userSchema = new Schema({
-	names: { type: String, required: true },
-	lastnames: { type: String, required: true },
+interface IUser {
+	names: string;
+	lastnames: string;
+	email: string;
+	password: string;
+	role: Schema.Types.ObjectId;
+	polls?: [Schema.Types.ObjectId];
+}
+
+const userSchema = new Schema<IUser>({
+	names: { type: String, required: true, minLength: 3, maxlength: 30 },
+	lastnames: { type: String, required: true, minLength: 3, maxlength: 30 },
 	email: {
 		type: String,
 		required: true,
 		unique: true,
+		maxlength: 254,
 	},
 	password: {
 		type: String,
@@ -20,10 +30,18 @@ const userSchema = new Schema({
 	polls: [
 		{
 			type: Schema.Types.ObjectId,
-			required: true,
+			required: false,
 			ref: "Poll",
 		},
 	],
 });
+
+userSchema.methods.toJSON = function () {
+	const { __v, _id, ...user } = this.toObject();
+	user.id = _id;
+	return user;
+};
+
+// type User = InferSchemaType<typeof userSchema>;
 
 export const UserModel = model("User", userSchema);

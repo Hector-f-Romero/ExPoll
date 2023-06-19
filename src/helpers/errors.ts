@@ -1,1 +1,0 @@
-class CreatingError extends Error {}
