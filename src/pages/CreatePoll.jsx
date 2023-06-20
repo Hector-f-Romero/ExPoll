@@ -2,8 +2,11 @@ import { useForm, useFieldArray } from "react-hook-form";
 
 import Input from "../components/Input";
 import { MODAL_TYPES, showErrorModal, showModal } from "../components/modals/Modals";
+import { useDurationPoll } from "../components/hooks/useDurationPoll";
+import { createPollService } from "../services/poll.service";
 
 const CreatePoll = () => {
+	const { durationPoll, formattedTime, handleChange } = useDurationPoll();
 	const {
 		register,
 		handleSubmit,
@@ -53,7 +56,14 @@ const CreatePoll = () => {
 			await showErrorModal("At least two options", "A poll require at least two options", "Ok");
 			return;
 		}
+
+		data.duration = durationPoll;
+		data.createdBy = import.meta.env.VITE_UNREGISTERED_USER_ID;
+		data.verified = false;
+
 		console.log(data);
+		// const res = await createPollService(data);
+		// console.log(res);
 	};
 
 	return (
@@ -82,6 +92,19 @@ const CreatePoll = () => {
 						maxLength={{ value: 500, message: "Poll description must be between 3 and 500 character." }}
 						register={register}
 						errors={errors.description}
+					/>
+					<label htmlFor="duration" className="font-medium text-sm md:text-xl">
+						Duration ({formattedTime})
+					</label>
+					<input
+						type="range"
+						defaultValue={durationPoll}
+						name="duration"
+						min={10}
+						max={300}
+						step={10}
+						onChange={handleChange}
+						className="w-full my-2 bg-gray-700 outline-none border border-neutral-600 focus:border-neutral-300 shadow-sm rounded-lg cursor-pointer appearance-none"
 					/>
 					<div className="flex flex-row items-center gap-5 mt-2">
 						<p className="font-medium text-sm md:text-xl">Available options</p>
