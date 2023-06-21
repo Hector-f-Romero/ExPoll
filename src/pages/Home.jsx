@@ -19,8 +19,8 @@ const Home = () => {
 	};
 
 	return (
-		<div className=" h-screen">
-			<div className="bg-[#202938] flex flex-col justify-center items-center h-[20vh] pt-2 text-white">
+		<>
+			<div className="bg-[#202938] flex flex-col justify-center items-center py-7 text-white">
 				<h1 className="text-5xl sm:text-6xl font-bold animate-fade-up animate-once animate-duration-1000 animate-ease-in-out">
 					ExPoll
 				</h1>
@@ -80,7 +80,7 @@ const Home = () => {
 					</form>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

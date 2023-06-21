@@ -5,7 +5,7 @@ import { Bar } from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 ChartJS.defaults.color = "#fff";
 
-export const PollView = () => {
+const PollView = () => {
 	const pollData = {
 		labels: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"],
 		datasets: [
@@ -44,3 +44,5 @@ export const PollView = () => {
 	};
 	return <Bar options={pollOptions} data={pollData} plugins={[ChartDataLabels]} />;
 };
+
+export default PollView;
