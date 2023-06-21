@@ -5,6 +5,7 @@ import "./index.css";
 import { axiosInterceptor } from "./interceptors/axios.interceptor";
 import Home from "./pages/Home.jsx";
 import CreatePoll from "./pages/CreatePoll";
+import { MonitorPoll } from "./pages/MonitorPoll";
 
 axiosInterceptor();
 
@@ -14,6 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/create" element={<CreatePoll />} />
+				<Route path="/monitor/:id" element={<MonitorPoll />} />
 			</Routes>
 		</BrowserRouter>
 	</>

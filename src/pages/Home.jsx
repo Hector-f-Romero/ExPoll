@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
+import { Input } from "../components";
 
 const Home = () => {
 	const formWithoutAuth = useForm();
@@ -28,7 +28,7 @@ const Home = () => {
 					Create <span className="text-[#e6039c] font-semibold">express polls</span> everywhere
 				</p>
 			</div>
-			<div className="grid grid-cols-1 sm:grid-cols-2 bg-[#111A21] h-[80vh] relative">
+			<div className="grid grid-cols-1 sm:grid-cols-2 h-[80vh] relative">
 				<div className="bg-main-card w-10/12 relative top-8 sm:top-32 h-fit mx-auto px-8 sm:px-14 py-5 sm:py-14 rounded-lg text-[#a7a5a5] animate-fade-up animate-once animate-duration-1000 animate-delay-500 animate-ease-in-out">
 					<h2 className="text-2xl sm:text-3xl lg:text-4xl mb-5 font-semibold text-center text-white">
 						Create a quick poll

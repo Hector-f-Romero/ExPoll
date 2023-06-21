@@ -1,12 +1,14 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-import Input from "../components/Input";
 import { MODAL_TYPES, showErrorModal, showModal } from "../components/modals/Modals";
-import { useDurationPoll } from "../components/hooks/useDurationPoll";
-import { createPollService } from "../services/poll.service";
+import { useDurationPoll } from "../hooks/useDurationPoll";
+import { Input } from "../components";
+// import { createPollService } from "../services/poll.service";
 
 const CreatePoll = () => {
 	const { durationPoll, formattedTime, handleChange } = useDurationPoll();
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -64,6 +66,7 @@ const CreatePoll = () => {
 		console.log(data);
 		// const res = await createPollService(data);
 		// console.log(res);
+		navigate("/monitor/23232");
 	};
 
 	return (
