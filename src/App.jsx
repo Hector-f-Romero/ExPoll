@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { MonitorPoll, CreatePoll, Home } from "./pages/";
+import { MonitorPoll, CreatePoll, Home, Register } from "./pages/";
 
 const App = () => {
 	return (
@@ -9,6 +9,7 @@ const App = () => {
 				<Route path="/" element={<Home />} />
 				<Route path="/create" element={<CreatePoll />} />
 				<Route path="/monitor/:id" element={<MonitorPoll />} />
+				<Route path="/register" element={<Register />} />
 			</Routes>
 		</BrowserRouter>
 	);

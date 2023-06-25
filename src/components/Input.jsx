@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
 
 // This Input component is able to reuse the logic of react-hook-form by means of these props
-const Input = ({ label, placeholder, register, name, minLength, required, maxLength, errors }) => {
+const Input = ({ label, placeholder, type, register, name, minLength, required, maxLength, errors }) => {
 	return (
 		<>
 			<label htmlFor={name} className="font-medium text-sm md:text-xl">
 				{label}
 			</label>
 			<input
-				type="text"
+				type={type || "text"}
 				placeholder={placeholder}
 				{...register(name, {
 					required: {
@@ -35,7 +35,8 @@ const Input = ({ label, placeholder, register, name, minLength, required, maxLen
 
 Input.propTypes = {
 	label: PropTypes.string.isRequired,
-	placeholder: PropTypes.string.isRequired,
+	placeholder: PropTypes.string,
+	type: PropTypes.string.isRequired,
 	register: PropTypes.func.isRequired,
 	name: PropTypes.string.isRequired,
 	minLength: PropTypes.object,

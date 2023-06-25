@@ -1,4 +1,4 @@
-import { NavBar, PollView } from "../components";
+import { CountDown, NavBar, PollView } from "../components";
 
 const MonitorPoll = () => {
 	return (
@@ -12,7 +12,7 @@ const MonitorPoll = () => {
 							<PollView />
 						</div>
 						<div className="p-5 basis-3/4">
-							<p className="text-2xl sm:text-3xl lg:text-4xl my-5 font-medium text-center">01:34 </p>
+							<CountDown time={5} />
 							<p className="text-2xl sm:text-3xl lg:text-4xl my-5 font-medium">
 								Lorem ipsum odor amet, consectetuer adipiscing elit. Duis proin est semper non varius.
 							</p>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { MODAL_TYPES, showErrorModal, showModal } from "../components/modals/Modals";
 import { useDurationPoll } from "../hooks/useDurationPoll";
 import { Input } from "../components";
-// import { createPollService } from "../services/poll.service";
+import { createPollService } from "../services/poll.service";
 
 const CreatePoll = () => {
 	const { durationPoll, formattedTime, handleChange } = useDurationPoll();
@@ -59,14 +59,17 @@ const CreatePoll = () => {
 			return;
 		}
 
+		data.options = data.options.map((option) => option.value);
+		// console.log(formattedOptions);
 		data.duration = durationPoll;
 		data.createdBy = import.meta.env.VITE_UNREGISTERED_USER_ID;
 		data.verified = false;
+		data.createdBy = "6498606acf84826724f4609e";
 
 		console.log(data);
-		// const res = await createPollService(data);
-		// console.log(res);
-		navigate("/monitor/23232");
+		const res = await createPollService(data);
+		console.log(res);
+		// navigate("/monitor/23232");
 	};
 
 	return (
@@ -79,6 +82,7 @@ const CreatePoll = () => {
 					<Input
 						label="Title"
 						placeholder="Poll title"
+						type="text"
 						name="title"
 						required={{ value: true, message: "Poll title is required." }}
 						minLength={{ value: 3, message: "Poll title must be between 3 and 10 character." }}
@@ -89,6 +93,7 @@ const CreatePoll = () => {
 					<Input
 						label="Description"
 						placeholder="Poll description"
+						type="text"
 						name="description"
 						required={{ value: true, message: "Poll description is required." }}
 						minLength={{ value: 3, message: "Poll description must be between 3 and 10 character." }}
@@ -129,6 +134,7 @@ const CreatePoll = () => {
 								<Input
 									label={`Option ${index + 1}`}
 									placeholder={`Option ${index + 1}`}
+									type="text"
 									name={`options.${index}.value`}
 									required={{ value: true, message: "Option cannot be empty." }}
 									minLength={{ value: 3, message: "Option must be between 3 and 10 character." }}

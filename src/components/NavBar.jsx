@@ -11,7 +11,7 @@ const NavBar = () => {
 	const [open, setOpen] = useState(false);
 	return (
 		<header>
-			<nav className="shadow-md w-full top-0 left-0 ">
+			<nav className="shadow-md w-full top-0 left-0 fixed">
 				<div className="md:flex items-center justify-between bg-[#243140] py-4 md:px-10 px-7 ">
 					<span className="font-bold text-2xl cursor-pointer flex items-center gap-1">ExPoll</span>
 					<div

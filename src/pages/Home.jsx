@@ -37,6 +37,7 @@ const Home = () => {
 						<Input
 							label={"Poll creator"}
 							placeholder={"Name"}
+							type="text"
 							name={"creator"}
 							required={{ value: true, message: "Name is required." }}
 							minLength={{ value: 3, message: "Name must be between 3 and 10 character." }}
@@ -60,6 +61,7 @@ const Home = () => {
 							label={"Email"}
 							placeholder={"Email"}
 							name={"email"}
+							type="text"
 							required={{ value: true, message: "Email is required." }}
 							register={formLogin.register}
 							errors={formLogin.formState.errors.email}
@@ -68,6 +70,7 @@ const Home = () => {
 							label={"Password"}
 							placeholder={"Password"}
 							name={"password"}
+							type="text"
 							required={{ value: true, message: "Password is required." }}
 							register={formLogin.register}
 							errors={formLogin.formState.errors.password}
