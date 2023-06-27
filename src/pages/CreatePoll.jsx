@@ -64,12 +64,22 @@ const CreatePoll = () => {
 		data.duration = durationPoll;
 		data.createdBy = import.meta.env.VITE_UNREGISTERED_USER_ID;
 		data.verified = false;
-		data.createdBy = "6498606acf84826724f4609e";
 
 		console.log(data);
-		const res = await createPollService(data);
-		console.log(res);
-		// navigate("/monitor/23232");
+		try {
+			const res = await createPollService(data);
+			console.log(res.data);
+			console.log(res.data.poll.id);
+			await showModal({
+				title: "Poll created successfully",
+				confirmText: "Let's monitor",
+				text: "Now you can see the results of your poll.",
+				type: "success",
+			});
+			navigate(`/monitor/${res.data.poll.id}`);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -108,7 +118,7 @@ const CreatePoll = () => {
 						type="range"
 						defaultValue={durationPoll}
 						name="duration"
-						min={10}
+						min={30}
 						max={300}
 						step={10}
 						onChange={handleChange}

@@ -1,17 +1,19 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Bar } from "react-chartjs-2";
+import PropTypes from "prop-types";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 ChartJS.defaults.color = "#fff";
 
-const PollView = () => {
+const PollView = ({ data }) => {
 	const pollData = {
-		labels: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"],
+		labels: data?.options?.map((option) => option.option),
+		// labels: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"],
 		datasets: [
 			{
 				label: "Dataset1",
-				data: [5, 2, 10, 2, 5, 6],
+				data: data?.options?.map((option) => option.numberOfVotes),
 				borderWidth: 1,
 				backgroundColor: ["#E31A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#A65628"],
 			},
@@ -27,7 +29,7 @@ const PollView = () => {
 			},
 			title: {
 				display: true,
-				text: "Lorem ipsum odor amet, consectetuer adipiscing elit.",
+				text: data?.title,
 				font: function (context) {
 					var width = context.chart.width;
 					var size = Math.round(width / 32);
@@ -43,6 +45,10 @@ const PollView = () => {
 		},
 	};
 	return <Bar options={pollOptions} data={pollData} plugins={[ChartDataLabels]} />;
+};
+
+PollView.propTypes = {
+	data: PropTypes.object,
 };
 
 export default PollView;
