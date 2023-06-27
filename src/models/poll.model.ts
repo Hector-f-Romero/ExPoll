@@ -13,6 +13,10 @@ const pollSchema = new Schema(
 			type: Number,
 			required: true,
 		},
+		finishAt: {
+			type: Date,
+			required: false,
+		},
 		completed: {
 			type: Boolean,
 			default: false,

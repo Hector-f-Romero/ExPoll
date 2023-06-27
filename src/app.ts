@@ -1,5 +1,6 @@
 import express from "express";
 import "dotenv/config";
+import cors from "cors";
 
 import { connectDB } from "./db/mongo.config.js";
 import pollRoutes from "./routes/poll.routes.js";
@@ -10,6 +11,7 @@ const PORT = process.env.PORT;
 
 connectDB();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/poll", pollRoutes);
