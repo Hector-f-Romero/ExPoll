@@ -12,7 +12,7 @@ export const axiosInterceptor = () => {
 
 	instanceBackend.interceptors.response.use(
 		(response) => {
-			console.log("Response", response);
+			// console.log("Response", response);
 			return response;
 		},
 		(error) => {

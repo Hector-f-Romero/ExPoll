@@ -36,7 +36,7 @@ const MonitorPoll = () => {
 							<PollView data={poll} />
 						</div>
 						<div className="p-5 basis-3/4">
-							<CountDown idPoll={poll.id} />
+							<CountDown poll={poll} />
 							<p className="text-2xl sm:text-3xl lg:text-4xl my-5 font-medium">{poll?.title}</p>
 							<p className="my-2 text-base lg:text-base font-normal">{poll?.description}</p>
 							<p className="my-2 text-base lg:text-base font-normal">Created by: Test1</p>

@@ -62,7 +62,7 @@ const CreatePoll = () => {
 		data.options = data.options.map((option) => option.value);
 		// console.log(formattedOptions);
 		data.duration = durationPoll;
-		data.createdBy = import.meta.env.VITE_UNREGISTERED_USER_ID;
+		data.createdBy = import.meta.env.VITE_UNREGISTERED_CREATOR_USER_ID;
 		data.verified = false;
 
 		console.log(data);
