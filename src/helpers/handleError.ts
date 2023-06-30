@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { MongoServerError } from "mongodb";
+import { AlreadyExistInBD, NotFoundInBD } from "./index.js";
 
 export const handleErrorHTTP = (res: Response, error: unknown, HTTPCode?: number, customErrorMessage?: string) => {
 	let errorMessage = "";
@@ -18,5 +19,14 @@ export const handleErrorHTTP = (res: Response, error: unknown, HTTPCode?: number
 			return res.status(409).json({ error: errorMessage });
 		}
 	}
+
+	if (error instanceof NotFoundInBD) {
+		return res.status(404).json({ error: error.message });
+	}
+
+	if (error instanceof AlreadyExistInBD) {
+		return res.status(409).json({ error: error.message });
+	}
+
 	return res.status(500).json(error);
 };

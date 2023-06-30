@@ -1,6 +1,21 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+import { IOption } from "./option.model";
+import { IUser } from "./user.model";
 
-const pollSchema = new Schema(
+export interface IPoll extends Document {
+	title: string;
+	description: string;
+	createdBy: IUser;
+	duration: number;
+	finishAt: Date;
+	completed: boolean;
+	verified: boolean;
+	options: IOption[];
+	participants: IUser[];
+	createdAt: Date;
+}
+
+const pollSchema = new Schema<IPoll>(
 	{
 		title: { type: String, required: true },
 		description: { type: String, required: true },

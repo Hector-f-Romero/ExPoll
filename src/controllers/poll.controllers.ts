@@ -1,15 +1,26 @@
 import { Request, Response } from "express";
-import { PollModel, OptionModel, IOption } from "../models/index.js";
+import { PollModel, OptionModel, IOption, IPoll } from "../models/index.js";
 import { handleErrorHTTP } from "../helpers/handleError.js";
+import { Document } from "mongoose";
 
 const getPolls = async (req: Request, res: Response) => {
 	const polls = await PollModel.find({});
+
 	return res.json(polls);
 };
 
 const getPoll = async (req: Request, res: Response) => {
-	const poll = await PollModel.findById(req.params.id).populate([{ path: "options" }]);
-	return res.json(poll);
+	try {
+		const poll = await PollModel.findById(req.params.id).populate([{ path: "options" }]);
+
+		if (!poll) {
+			return res.status(404).json({ error: `Poll with id ${req.params.id} doesn't exist.` });
+		}
+		return res.json(poll);
+	} catch (error) {
+		console.log(error);
+		return handleErrorHTTP(res, error, 500);
+	}
 };
 
 const createPoll = async (req: Request, res: Response) => {
@@ -45,11 +56,31 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 		"Cache-Control": "no-cache",
 	});
 
-	const poll = await PollModel.findById(req.params.id);
+	let poll: IPoll | null;
 
-	if (poll?.completed === true) {
-		res.write(`data: "Finished"\n\n`);
+	// 1. Find the poll in BD
+	try {
+		poll = await PollModel.findById(req.params.id);
+
+		if (!poll) {
+			res.write(`error: "Poll don't found"\n\n`);
+			res.end();
+			return;
+			// throw new Error("Poll don't exists in BD")
+		}
+
+		if (poll?.completed === true) {
+			console.log("Ya se completó");
+			res.write(`event: finishPoll\n`);
+			res.write(`data: "Finished"\n\n`);
+			res.end();
+
+			return;
+		}
+	} catch (error) {
+		res.write(`error: "Error"\n\n`);
 		res.end();
+		return;
 	}
 
 	//TODO: verify if is possible avoid the non-null assersion operator
@@ -60,10 +91,10 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	const updateCompletePoll = async () => {
 		await PollModel.findByIdAndUpdate(poll?.id, { completed: true });
 	};
-
 	const intervalId = setInterval(() => {
 		if (countDownTimer <= 0) {
 			updateCompletePoll();
+			res.write(`event: finishPoll\n`);
 			res.write(`data: "Finished"\n\n`);
 			res.end();
 		} else {
