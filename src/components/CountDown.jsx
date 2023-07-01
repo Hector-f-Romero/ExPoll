@@ -6,7 +6,7 @@ const CountDown = ({ poll, setPoll }) => {
 
 	useEffect(() => {
 		const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/poll/duration/${poll?.id}`);
-		console.log(eventSource);
+		// console.log(eventSource);
 
 		eventSource.onmessage = (event) => {
 			// console.log(event.data);
@@ -14,14 +14,14 @@ const CountDown = ({ poll, setPoll }) => {
 		};
 
 		eventSource.addEventListener("finishPoll", (event) => {
-			console.log("Evento personalizado");
+			// console.log("Evento personalizado");
 			setPoll({ ...poll, completed: true });
 			setCountDown(event.data);
-			console.log(event.data);
+			// console.log(event.data);
 		});
 
 		eventSource.onerror = function () {
-			console.log("Client closed");
+			// console.log("Client closed");
 			eventSource.close();
 		};
 
@@ -44,7 +44,7 @@ const CountDown = ({ poll, setPoll }) => {
 
 CountDown.propTypes = {
 	poll: PropTypes.object,
-	setPoll: PropTypes.func,
+	setPoll: PropTypes.any,
 };
 
 export default CountDown;

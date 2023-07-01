@@ -33,7 +33,7 @@ const MonitorPoll = () => {
 					<h1 className="text-3xl sm:text-4xl lg:text-5xl my-7 font-bold text-center">Monitoring poll</h1>
 					<div className="flex flex-col lg:flex-row">
 						<div className="bg-[#243140] flex justify-center items-center p-4 basis-full rounded-none lg:rounded-lg lg:rounded-br-none">
-							<PollView data={poll} />
+							<PollView poll={poll} setPoll={setPoll} />
 						</div>
 						<div className="p-5 basis-3/4">
 							<CountDown poll={poll} />

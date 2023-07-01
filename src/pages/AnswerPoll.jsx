@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { io } from "socket.io-client";
 
 import { getPollService } from "../services/poll.service";
-import { CountDown, SpinnerLoading } from "../components";
-import { useForm } from "react-hook-form";
+import { CountDown, SpinnerLoading, showModal } from "../components";
 import { voteOptionService } from "../services/option.service";
+
+const socket = io(import.meta.env.VITE_BACKEND_SOCKET_URL);
 
 const AnswerPoll = () => {
 	const [poll, setPoll] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const { id } = useParams();
 	const { register, handleSubmit } = useForm();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getDatBD = async () => {
@@ -21,16 +25,27 @@ const AnswerPoll = () => {
 			setIsLoading(false);
 		};
 		getDatBD();
-	}, []);
+
+		return () => {
+			socket.disconnect();
+		};
+	}, [socket]);
 
 	const onSubmit = async (data) => {
-		console.log(poll);
-
 		data.idVoter = import.meta.env.VITE_UNREGISTERED_VOTER_USER_ID;
 		data.pollId = poll.id;
 		console.log(data);
 		const res = await voteOptionService(data);
-		console.log(res);
+		socket.emit("vote", { msg: "Hola", id: poll.id });
+		if (res.status === 200) {
+			await showModal({
+				title: "Vote sent",
+				text: "Your vote has been saved successfully",
+				type: "success",
+				confirmText: "Ok, view the results",
+			});
+			navigate(`/monitor/${poll.id}`);
+		}
 	};
 
 	if (isLoading || poll === null) {
@@ -62,7 +77,7 @@ const AnswerPoll = () => {
 					<div className="flex justify-center items-center">
 						<button
 							type="submit"
-							// disabled={poll?.completed}
+							disabled={poll?.completed}
 							className={`w-3/4 px-4 py-2 my-2 text-white font-medium ${
 								poll?.completed
 									? "bg-slate-700 cursor-not-allowed"
