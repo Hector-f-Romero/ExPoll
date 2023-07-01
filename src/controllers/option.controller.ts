@@ -40,14 +40,14 @@ const addVoteUnregisteredToPoll = async (req: Request, res: Response) => {
 		}
 
 		// Verify that user hasn't vote twice or more
-		console.log(optionBD.voters);
-		const userAlreadyHasVoted = optionBD.voters.includes(user._id);
-		console.log(userAlreadyHasVoted);
-		console.log(user);
+		// console.log(optionBD.voters);
+		// const userAlreadyHasVoted = optionBD.voters.includes(user._id);
+		// console.log(userAlreadyHasVoted);
+		// console.log(user);
 
-		if (userAlreadyHasVoted) {
-			throw new AlreadyExistInBD(`User with id ${req.params.id} already has voted in this poll.`);
-		}
+		// if (userAlreadyHasVoted) {
+		// 	throw new AlreadyExistInBD(`User with id ${req.params.id} already has voted in this poll.`);
+		// }
 
 		optionBD.voters.push(user._id);
 		await optionBD.save();

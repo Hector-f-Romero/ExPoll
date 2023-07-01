@@ -49,7 +49,7 @@ const createPoll = async (req: Request, res: Response) => {
 };
 
 const controlDurationPoll = async (req: Request, res: Response) => {
-	console.log("Client connected");
+	// console.log("Client connected");
 	res.writeHead(200, {
 		"Content-Type": "text/event-stream",
 		Connection: "keep-alive",
@@ -70,7 +70,7 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 		}
 
 		if (poll?.completed === true) {
-			console.log("Ya se completó");
+			// console.log("Ya se completó");
 			res.write(`event: finishPoll\n`);
 			res.write(`data: "Finished"\n\n`);
 			res.end();

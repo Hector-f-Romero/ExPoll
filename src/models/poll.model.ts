@@ -11,7 +11,6 @@ export interface IPoll extends Document {
 	completed: boolean;
 	verified: boolean;
 	options: IOption[];
-	participants: IUser[];
 	createdAt: Date;
 }
 
@@ -46,13 +45,6 @@ const pollSchema = new Schema<IPoll>(
 				type: Schema.Types.ObjectId,
 				required: true,
 				ref: "Option",
-			},
-		],
-		participants: [
-			{
-				type: Schema.Types.ObjectId,
-				required: true,
-				ref: "User",
 			},
 		],
 	},
