@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { PollModel, OptionModel, IOption, IPoll } from "../models/index.js";
 import { handleErrorHTTP } from "../helpers/handleError.js";
-import { Document } from "mongoose";
 
 const getPolls = async (req: Request, res: Response) => {
 	const polls = await PollModel.find({});
-
 	return res.json(polls);
 };
 
@@ -16,9 +14,9 @@ const getPoll = async (req: Request, res: Response) => {
 		if (!poll) {
 			return res.status(404).json({ error: `Poll with id ${req.params.id} doesn't exist.` });
 		}
+
 		return res.json(poll);
 	} catch (error) {
-		console.log(error);
 		return handleErrorHTTP(res, error, 500);
 	}
 };
@@ -104,7 +102,7 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	}, 1000);
 
 	res.on("close", () => {
-		console.log("Client closed connection.");
+		// console.log("Client closed connection.");
 		clearInterval(intervalId);
 		return res.end();
 	});

@@ -48,8 +48,24 @@ const pollSchema = new Schema<IPoll>(
 			},
 		],
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
+	}
 );
+
+pollSchema.virtual("totalVotes").get(function () {
+	const totalVotes: number[] = this.options.map((option: IOption) => {
+		if (!option.voters) {
+			return 0;
+		} else {
+			return option.voters.length;
+		}
+	});
+	// Sum the length of each option to return the total number of votes
+	return totalVotes.reduce((a: number, b: number) => a + b, 0);
+});
 
 pollSchema.methods.toJSON = function () {
 	const { __v, _id, ...poll } = this.toObject();
