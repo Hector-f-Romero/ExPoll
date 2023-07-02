@@ -1,13 +1,12 @@
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { io } from "socket.io-client";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Bar } from "react-chartjs-2";
-import PropTypes from "prop-types";
-import { useEffect } from "react";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 ChartJS.defaults.color = "#fff";
-
 const socket = io(import.meta.env.VITE_BACKEND_SOCKET_URL);
 
 const PollView = ({ poll, setPoll }) => {
@@ -26,7 +25,6 @@ const PollView = ({ poll, setPoll }) => {
 
 	const pollOptions = {
 		responsive: true,
-
 		plugins: {
 			legend: {
 				position: "false",
@@ -50,7 +48,11 @@ const PollView = ({ poll, setPoll }) => {
 	};
 
 	useEffect(() => {
-		socket.emit("link-poll", { id: poll?.id });
+		const connectToPollRoom = () => {
+			console.log(`Conectado a ${poll.id}`);
+			console.log(socket);
+			socket.emit("link-poll", { id: poll.id });
+		};
 
 		socket.on("totalVotes", (payload) => {
 			console.log("Recibiendo datos actualizados");
@@ -58,7 +60,10 @@ const PollView = ({ poll, setPoll }) => {
 			setPoll(payload.poll);
 		});
 
+		connectToPollRoom();
+
 		return () => {
+			console.log("Me desconecté en poll view");
 			socket.disconnect();
 		};
 	}, []);

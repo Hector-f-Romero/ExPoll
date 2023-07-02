@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { CountDown, NavBar, PollView } from "../components";
-import { getPollService } from "../services/poll.service";
 import { useParams } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
+
+import { CountDown, MODAL_TYPES, NavBar, PollView, showModal, showQRModal } from "../components";
+import { getPollService } from "../services/poll.service";
 import { formatISODate } from "../helpers/index.js";
 
 const MonitorPoll = () => {
@@ -36,16 +38,48 @@ const MonitorPoll = () => {
 							<PollView poll={poll} setPoll={setPoll} />
 						</div>
 						<div className="p-5 basis-3/4">
-							<CountDown poll={poll} />
+							<CountDown poll={poll} setPoll={setPoll} />
 							<p className="text-2xl sm:text-3xl lg:text-4xl my-5 font-medium">{poll?.title}</p>
 							<p className="my-2 text-base lg:text-base font-normal">{poll?.description}</p>
 							<p className="my-2 text-base lg:text-base font-normal">Created by: Test1</p>
 							<p className="my-2 text-base lg:text-base font-normal">
 								Ends at: {poll?.formattedFinishAt}
 							</p>
-							<p className="my-2 text-base lg:text-base font-normal">Total votes: 7</p>
+							<p className="my-2 text-base lg:text-base font-normal">Total votes: {poll?.totalVotes}</p>
+							{poll?.completed === true ? null : (
+								<div className="flex flex-col justify-center items-center">
+									<p className="text-lg sm:text-lg lg:text-lg my-5 font-medium">
+										Vote with this QR code
+									</p>
+									<div
+										className="flex flex-col items-center justify-center"
+										onClick={async () =>
+											await showQRModal(
+												`${import.meta.env.VITE_FRONTEND_URL}/answer/poll/${poll?.id}`
+											)
+										}>
+										<QRCodeSVG value={`http://localhost:5173/answer/poll/${poll?.id}`} size={160} />
+									</div>
+									<button
+										onClick={async () => {
+											navigator.clipboard.writeText(
+												`http://localhost:5173/answer/poll/${poll?.id}`
+											);
+
+											await showModal({
+												title: "Copy link",
+												type: MODAL_TYPES.SUCCESS,
+												confirmText: "Ok",
+											});
+										}}
+										className="w-2/4 sm:w-1/4 px-2 py-2 sm:py-3 mt-5 mb-2 font-medium sm:text-sm lg:text-md border-primary-button border-2 text-primary-button hover:text-hover-primary-button hover:border-hover-primary-button active:border-hover-primary-button rounded-lg duration-150">
+										Share answer link
+									</button>
+								</div>
+							)}
+
 							<div className="flex justify-center items-center">
-								<button className=" w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
+								<button className="w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
 									Finish
 								</button>
 							</div>

@@ -1,7 +1,7 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-import { MODAL_TYPES, showErrorModal, showModal } from "../components/modals/Modals";
+import { MODAL_TYPES, showModal } from "../components/modals/Modals";
 import { useDurationPoll } from "../hooks/useDurationPoll";
 import { Input, NavBar } from "../components";
 import { createPollService } from "../services/poll.service";
@@ -32,7 +32,12 @@ const CreatePoll = () => {
 	const handleDeleteOption = async (index) => {
 		// Verify that at least two options available.
 		if (fields.length === 2) {
-			await showErrorModal("At least two options", "A poll require at least two options", "Ok");
+			await showModal({
+				title: "At least two options",
+				text: "A poll require at least two options",
+				confirmText: "Ok",
+				type: MODAL_TYPES.ERROR,
+			});
 			return;
 		}
 
@@ -55,7 +60,12 @@ const CreatePoll = () => {
 	const onSubmit = async (data) => {
 		// Verify that at least two options available.
 		if (fields.length < 2) {
-			await showErrorModal("At least two options", "A poll require at least two options", "Ok");
+			await showModal({
+				title: "At least two options",
+				text: "A poll require at least two options",
+				type: MODAL_TYPES.ERROR,
+				confirmText: "Ok",
+			});
 			return;
 		}
 

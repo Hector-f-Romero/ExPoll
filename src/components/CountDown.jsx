@@ -44,7 +44,7 @@ const CountDown = ({ poll, setPoll }) => {
 
 CountDown.propTypes = {
 	poll: PropTypes.object,
-	setPoll: PropTypes.any,
+	setPoll: PropTypes.func,
 };
 
 export default CountDown;

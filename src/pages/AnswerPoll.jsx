@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 
 import { getPollService } from "../services/poll.service";
-import { CountDown, SpinnerLoading, showModal } from "../components";
+import { CountDown, MODAL_TYPES, SpinnerLoading, showModal } from "../components";
 import { voteOptionService } from "../services/option.service";
 
 const socket = io(import.meta.env.VITE_BACKEND_SOCKET_URL);
@@ -34,17 +34,17 @@ const AnswerPoll = () => {
 	const onSubmit = async (data) => {
 		data.idVoter = import.meta.env.VITE_UNREGISTERED_VOTER_USER_ID;
 		data.pollId = poll.id;
-		console.log(data);
 		const res = await voteOptionService(data);
-		socket.emit("vote", { msg: "Hola", id: poll.id });
+		console.log(`Id del poll: ${poll.id}`);
+		socket.emit("vote", { id: poll.id });
 		if (res.status === 200) {
 			await showModal({
 				title: "Vote sent",
 				text: "Your vote has been saved successfully",
-				type: "success",
+				type: MODAL_TYPES.SUCCESS,
 				confirmText: "Ok, view the results",
 			});
-			navigate(`/monitor/${poll.id}`);
+			navigate(`/monitor/${poll.id}`, { replace: true });
 		}
 	};
 
@@ -54,7 +54,7 @@ const AnswerPoll = () => {
 
 	return (
 		<div className="flex items-center justify-center h-screen flex-wrap ">
-			<div className="bg-main-card w-11/12 h-11/12 rounded-lg px-7 py-3">
+			<div className="bg-main-card w-11/12 lg:w-2/3 h-11/12 lg:2/3 rounded-lg px-7 py-3">
 				{!isLoading && <CountDown poll={poll} setPoll={setPoll} />}
 				<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">{poll?.title}</h1>
 				<h1 className="my-2 text-lg sm:text-xl lg:text-2xl font-semibold text-center">ID code: {poll?.id}</h1>

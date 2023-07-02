@@ -6,7 +6,7 @@ export const instanceBackend = axios.create({
 
 export const axiosInterceptor = () => {
 	instanceBackend.interceptors.request.use((request) => {
-		console.log("Starting Request", request);
+		// console.log("Starting Request", request);
 		return request;
 	});
 
