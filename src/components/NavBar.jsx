@@ -5,14 +5,15 @@ import { NavLink } from "react-router-dom";
 const links = [
 	{ id: 1, name: "Home", link: "/" },
 	{ id: 2, name: "Create", link: "/create" },
-	{ id: 3, name: "Login", link: "/" },
+	{ id: 3, name: "History", link: "/history" },
+	{ id: 4, name: "Login", link: "/" },
 ];
 
 const NavBar = () => {
 	const [open, setOpen] = useState(false);
 	return (
 		<header>
-			<nav className="shadow-md w-full top-0 left-0 fixed">
+			<nav className="shadow-md w-full top-0 left-0 fixed z-50">
 				<div className="md:flex items-center justify-between bg-[#243140] py-4 md:px-10 px-7 ">
 					<span className="font-bold text-2xl cursor-pointer flex items-center gap-1">ExPoll</span>
 					<div

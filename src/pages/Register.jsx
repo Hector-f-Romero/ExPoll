@@ -1,5 +1,8 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
 import { Input, NavBar, showModal } from "../components";
+import { createUserService } from "../services/user.service";
 
 const Register = () => {
 	const {
@@ -7,25 +10,29 @@ const Register = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const navigate = useNavigate();
 
 	const onSubmit = async (data) => {
 		if (data.confirmPassword !== data.password) {
-			await showModal({
+			return await showModal({
 				title: "Passwords don't match",
 				type: "error",
 				text: "The entered passwords don't match. Please try again. ",
 				confirmText: "Ok",
 			});
 		}
-		console.log(data);
-
+		data.role = import.meta.env.VITE_USER_ROLE_ID;
+		// console.log(data);
+		const res = await createUserService(data);
+		console.log(res);
 		// TODO: Create user in BD
 		await showModal({
 			title: "User created correctly",
 			type: "success",
 			text: "Thanks for register in ExPoll ",
-			confirmText: "Ok, go to home",
+			confirmText: "Ok, let's start",
 		});
+		navigate("/history", { replace: true });
 	};
 
 	return (
@@ -41,12 +48,12 @@ const Register = () => {
 							label="Names"
 							placeholder="Names"
 							type="text"
-							name="name"
+							name="names"
 							required={{ value: true, message: "Names is required." }}
 							minLength={{ value: 3, message: "Names must be between 3 and 10 character." }}
 							maxLength={{ value: 30, message: "Names must be between 3 and 30 character." }}
 							register={register}
-							errors={errors.name}
+							errors={errors.names}
 						/>
 						<Input
 							label="Lastnames"
