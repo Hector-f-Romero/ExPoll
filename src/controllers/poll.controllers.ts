@@ -21,6 +21,23 @@ const getPoll = async (req: Request, res: Response) => {
 	}
 };
 
+const getPollsByUser = async (req: Request, res: Response) => {
+	try {
+		const polls = await PollModel.find({ createdBy: req.params.id }).populate([
+			{ path: "options" },
+			{ path: "createdBy" },
+		]);
+
+		if (!polls) {
+			return res.status(404).json({ error: `Polls with id ${req.params.id} don't exist.` });
+		}
+
+		return res.json(polls);
+	} catch (error) {
+		return handleErrorHTTP(res, error, 500);
+	}
+};
+
 const createPoll = async (req: Request, res: Response) => {
 	const { title, description, createdBy, duration, options } = req.body;
 
@@ -44,6 +61,38 @@ const createPoll = async (req: Request, res: Response) => {
 	// Update the document with the finish date of poll
 	const updatedPoll = await PollModel.findByIdAndUpdate(poll.id, { finishAt: finishAt }, { new: true });
 	return res.json({ msg: "Ok", poll: updatedPoll });
+};
+
+const updatePoll = async (req: Request, res: Response) => {
+	const { title, description, createdBy, duration, completed, verified, options, finishAt } = req.body;
+	try {
+		const updatedPoll = await PollModel.findByIdAndUpdate(
+			req.params.id,
+			{
+				title,
+				description,
+				createdBy,
+				duration,
+				completed,
+				verified,
+				options,
+				finishAt,
+			},
+			{ new: true }
+		);
+		return res.status(200).json({ updatedPoll });
+	} catch (error) {
+		return handleErrorHTTP(res, error);
+	}
+};
+
+const deletePoll = async (req: Request, res: Response) => {
+	try {
+		await PollModel.findByIdAndDelete(req.params.id);
+		return res.status(204).json();
+	} catch (error) {
+		return handleErrorHTTP(res, error, 500);
+	}
 };
 
 const controlDurationPoll = async (req: Request, res: Response) => {
@@ -108,4 +157,4 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	});
 };
 
-export { getPolls, createPoll, getPoll, controlDurationPoll };
+export { getPolls, getPollsByUser, createPoll, getPoll, updatePoll, controlDurationPoll, deletePoll };

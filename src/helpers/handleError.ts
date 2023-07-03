@@ -4,12 +4,14 @@ import { AlreadyExistInBD, NotFoundInBD } from "./index.js";
 
 export const handleErrorHTTP = (res: Response, error: unknown, HTTPCode?: number, customErrorMessage?: string) => {
 	let errorMessage = "";
+	console.log(error);
 
 	// console.log(error);
 	if (error instanceof Error) {
 		if (error.name === "ValidationError") {
 			return res.status(400).json({ error: error.message });
 		}
+		return res.status(500).json(error.message);
 	}
 
 	if (error instanceof MongoServerError) {

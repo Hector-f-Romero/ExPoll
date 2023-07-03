@@ -11,7 +11,11 @@ const getUsers = async (req: Request, res: Response) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
-	const { names, lastnames, email, password, role } = req.body;
+	const { names, lastnames, email, password, confirmPassword, role } = req.body;
+
+	if (password !== confirmPassword) {
+		return res.status(409).json({ error: "The password don't match" });
+	}
 
 	const salt = bcrypt.genSaltSync(10);
 	const hashedPassword = await bcrypt.hash(password, salt);
