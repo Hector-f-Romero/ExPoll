@@ -11,3 +11,10 @@ export class AlreadyExistInBD extends Error {
 		this.name = "AlreadyExistDocumentInBDError";
 	}
 }
+
+export class NotFoundAuthToken extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "NotFoundAuthToken";
+	}
+}
