@@ -18,3 +18,10 @@ export class NotFoundAuthToken extends Error {
 		this.name = "NotFoundAuthToken";
 	}
 }
+
+export class UserWithoutPermits extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "UserWithoutPermits";
+	}
+}

@@ -8,6 +8,8 @@ import {
 	deletePoll,
 	updatePoll,
 } from "../controllers/index.js";
+import { validateJWT, validateRoles } from "../middlewares/index.js";
+import { RolesAvailableInDB } from "../models";
 
 const router = Router();
 
@@ -16,7 +18,7 @@ router.get("/:id", getPoll);
 router.get("/user/:id", getPollsByUser);
 router.get("/duration/:id", controlDurationPoll);
 router.post("/", createPoll);
-router.put("/:id", updatePoll);
+router.put("/:id", [validateJWT, validateRoles([RolesAvailableInDB.ADMIN, RolesAvailableInDB.USER])], updatePoll);
 router.delete("/:id", deletePoll);
 
 export default router;

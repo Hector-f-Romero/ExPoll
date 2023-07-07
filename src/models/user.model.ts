@@ -1,12 +1,12 @@
-import { Schema, model, InferSchemaType, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 
 export interface IUser extends Document {
 	names: string;
 	lastnames: string;
 	email: string;
 	password: string;
-	role: Schema.Types.ObjectId;
-	polls?: [Schema.Types.ObjectId];
+	role: Types.ObjectId;
+	polls?: [Types.ObjectId];
 }
 
 const userSchema = new Schema<IUser>({

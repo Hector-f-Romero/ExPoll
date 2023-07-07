@@ -1,9 +1,9 @@
-import { SignJWT } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 
-const generateJWT = async (id: string) => {
-	const secret = new TextEncoder().encode(process.env.SECRET_JWT);
+const secret = new TextEncoder().encode(process.env.SECRET_JWT);
 
-	return await new SignJWT({ id })
+const generateJWT = async (id: string, role: string) => {
+	return await new SignJWT({ id, role })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
 		.setIssuer("expoll.dev")
@@ -12,7 +12,11 @@ const generateJWT = async (id: string) => {
 		.sign(secret);
 };
 
-const verifyJWT = async () => {
-	console.log("a");
+const verifyWT = async (token: string) => {
+	return await jwtVerify(token, secret, {
+		issuer: "expoll.dev",
+		audience: "expoll.com",
+	});
 };
-export { generateJWT, verifyJWT };
+
+export { generateJWT, verifyWT };

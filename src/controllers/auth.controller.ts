@@ -23,7 +23,7 @@ const loginUser = async (req: Request, res: Response) => {
 			return res.status(400).json({ error: `The password is incorrect` });
 		}
 
-		const token = await generateJWT(user.id);
+		const token = await generateJWT(user.id, user.role.toHexString());
 
 		return res.status(200).json({ user, token });
 	} catch (error) {
@@ -33,7 +33,9 @@ const loginUser = async (req: Request, res: Response) => {
 
 const revalidateToken = async (req: Request, res: Response) => {
 	try {
-		return res.status(200).json({ token: "Ok" });
+		const { id, role } = res.locals.user;
+		const newToken = await generateJWT(id, role);
+		return res.status(200).json({ newToken });
 	} catch (error) {
 		return handleErrorHTTP(res, error);
 	}
