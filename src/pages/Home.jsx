@@ -1,8 +1,14 @@
 import { useForm } from "react-hook-form";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input } from "../components";
+
+import { Input, MODAL_TYPES, showModal } from "../components";
+import { loginUserService } from "../services";
+import { UserContext } from "../context/UserContext";
+import { setTokenAuth } from "../helpers/localStorageManagement";
 
 const Home = () => {
+	const { setData } = useContext(UserContext);
 	const formWithoutAuth = useForm();
 	const formLogin = useForm();
 	const navigate = useNavigate();
@@ -12,10 +18,22 @@ const Home = () => {
 		navigate("/create");
 	};
 
-	const onSubmitLogin = (data) => {
-		console.log("Log in");
-		console.log(data);
-		navigate("/create");
+	const onSubmitLogin = async (data) => {
+		try {
+			const res = await loginUserService(data);
+			console.log(res.data);
+			setData(res.data);
+			// TODO: Define if is required use localStorage to handle the authorization
+			setTokenAuth(res.data.token);
+			navigate("/history");
+		} catch (error) {
+			await showModal({
+				title: error.response.statusText,
+				text: error.response.data.error,
+				type: MODAL_TYPES.ERROR,
+				confirmText: "Ok",
+			});
+		}
 	};
 
 	return (
@@ -61,7 +79,7 @@ const Home = () => {
 							label={"Email"}
 							placeholder={"Email"}
 							name={"email"}
-							type="text"
+							type="email"
 							required={{ value: true, message: "Email is required." }}
 							register={formLogin.register}
 							errors={formLogin.formState.errors.email}
@@ -70,7 +88,7 @@ const Home = () => {
 							label={"Password"}
 							placeholder={"Password"}
 							name={"password"}
-							type="text"
+							type="password"
 							required={{ value: true, message: "Password is required." }}
 							register={formLogin.register}
 							errors={formLogin.formState.errors.password}

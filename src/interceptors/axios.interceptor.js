@@ -1,12 +1,19 @@
 import axios from "axios";
+import { getTokenAuth } from "../helpers/localStorageManagement";
+// import Cookies from "universal-cookie";
 
 export const instanceBackend = axios.create({
 	baseURL: import.meta.env.VITE_BACKEND_URL,
+	headers: {
+		Authorization: `Bearer ${getTokenAuth()}`,
+	},
 });
 
 export const axiosInterceptor = () => {
 	instanceBackend.interceptors.request.use((request) => {
-		// console.log("Starting Request", request);
+		// const cookies = Cookies();
+		// console.log(cookies);
+		console.log("Starting Request", request);
 		return request;
 	});
 
@@ -18,7 +25,7 @@ export const axiosInterceptor = () => {
 		(error) => {
 			// console.log("Error", error);
 			if (error.code === "ERR_BAD_REQUEST") {
-				return Promise.reject(error.response.data.error);
+				return Promise.reject(error);
 			}
 			return Promise.reject(error);
 		}
