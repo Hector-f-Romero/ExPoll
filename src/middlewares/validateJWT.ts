@@ -12,11 +12,15 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
 		}
 
 		const { payload } = await verifyWT(token);
-
 		const user = await UserModel.findById(payload.id);
 
 		if (!user) {
 			throw new NotFoundInBD(`The user doesn't exist.`);
+		}
+
+		// Verify if the user role in BD is the same that the sent by token.
+		if (user.role.toHexString() !== payload.role) {
+			throw new Error("User doesn't have permissions for this action.");
 		}
 
 		// Save the role and user id in the response object to recover this information in the next middlewares

@@ -25,7 +25,7 @@ const loginUser = async (req: Request, res: Response) => {
 
 		const token = await generateJWT(user.id, user.role.toHexString());
 
-		return res.status(200).json({ user, token });
+		return res.status(200).json({ id: user.id, role: user.role, token });
 	} catch (error) {
 		return handleErrorHTTP(res, error);
 	}

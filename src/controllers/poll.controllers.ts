@@ -9,7 +9,7 @@ const getPolls = async (req: Request, res: Response) => {
 
 const getPoll = async (req: Request, res: Response) => {
 	try {
-		const poll = await PollModel.findById(req.params.id).populate([{ path: "options" }]);
+		const poll = await PollModel.findById(req.params.id).populate([{ path: "options" }, { path: "createdBy" }]);
 
 		if (!poll) {
 			return res.status(404).json({ error: `Poll with id ${req.params.id} doesn't exist.` });
@@ -31,6 +31,22 @@ const getPollsByUser = async (req: Request, res: Response) => {
 		if (!polls) {
 			return res.status(404).json({ error: `Polls with id ${req.params.id} don't exist.` });
 		}
+
+		return res.json(polls);
+	} catch (error) {
+		return handleErrorHTTP(res, error, 500);
+	}
+};
+
+const getPollsAsParticipant = async (req: Request, res: Response) => {
+	try {
+		// 1. Get all the options where the user has participated
+		const votedOptons = await OptionModel.find({ voters: req.params.id });
+
+		// 2. Find all the polls where the key "options" contain any of the options found previusly
+		const polls = await PollModel.find({
+			options: { $in: votedOptons.map((option) => option._id.toHexString()) },
+		}).populate([{ path: "options" }, { path: "createdBy" }]);
 
 		return res.json(polls);
 	} catch (error) {
@@ -157,4 +173,13 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	});
 };
 
-export { getPolls, getPollsByUser, createPoll, getPoll, updatePoll, controlDurationPoll, deletePoll };
+export {
+	getPolls,
+	getPollsByUser,
+	getPollsAsParticipant,
+	createPoll,
+	getPoll,
+	updatePoll,
+	controlDurationPoll,
+	deletePoll,
+};
