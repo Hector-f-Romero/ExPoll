@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
-import { PollModel, OptionModel, IOption, IPoll } from "../models/index.js";
+import { EventEmitter } from "events";
+import { PollModel, OptionModel, IPoll } from "../models/index.js";
 import { handleErrorHTTP } from "../helpers/handleError.js";
+import { NotFoundInBD } from "../helpers/errors.js";
+
+const eventEmitter = new EventEmitter();
 
 const getPolls = async (req: Request, res: Response) => {
 	const polls = await PollModel.find({});
@@ -66,7 +70,7 @@ const createPoll = async (req: Request, res: Response) => {
 			optionsMongo.push(newOption._id);
 		})
 	);
-	const poll = new PollModel({ title, description, createdBy, duration, options: optionsMongo });
+	const poll = new PollModel({ title, description, createdBy, options: optionsMongo });
 
 	// First save the document to obtain the createdAt key. With this value, is possible to set the finishAt
 	await poll.save();
@@ -154,6 +158,13 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	const updateCompletePoll = async () => {
 		await PollModel.findByIdAndUpdate(poll?.id, { completed: true });
 	};
+
+	eventEmitter.once("customEvent", (data) => {
+		res.write(`event: finishPoll\n`);
+		res.write(`data: "Finished"\n\n`);
+		res.end();
+	});
+
 	const intervalId = setInterval(() => {
 		if (countDownTimer <= 0) {
 			updateCompletePoll();
@@ -173,6 +184,33 @@ const controlDurationPoll = async (req: Request, res: Response) => {
 	});
 };
 
+const finishPoll = async (req: Request, res: Response) => {
+	try {
+		// const poll = await PollModel.findByIdAndUpdate(req.params.id, { completed: true,finishAt:new Date().toISOString() });
+		const poll = await PollModel.findById(req.params.id);
+
+		if (!poll) {
+			throw new NotFoundInBD("Poll doesn't exist in BD.");
+		}
+
+		// Check if the poll already has finished
+		const currentDate = new Date();
+
+		if (currentDate.valueOf() > poll.finishAt.valueOf()) {
+			return res.status(409).json({ error: "The poll already has finished." });
+		}
+		console.log(currentDate.toISOString());
+
+		await PollModel.updateOne({ _id: poll.id }, { completed: true, finishAt: currentDate.toISOString() });
+
+		//TODO: Notify to countdown that the poll has finished
+		eventEmitter.emit("customEvent", "Custom event data");
+		return res.status(200).json(poll);
+	} catch (error) {
+		return handleErrorHTTP(res, error);
+	}
+};
+
 export {
 	getPolls,
 	getPollsByUser,
@@ -181,5 +219,6 @@ export {
 	getPoll,
 	updatePoll,
 	controlDurationPoll,
+	finishPoll,
 	deletePoll,
 };

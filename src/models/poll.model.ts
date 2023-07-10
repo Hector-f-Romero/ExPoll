@@ -6,7 +6,6 @@ export interface IPoll extends Document {
 	title: string;
 	description: string;
 	createdBy: IUser;
-	duration: number;
 	finishAt: Date;
 	completed: boolean;
 	verified: boolean;
@@ -22,10 +21,6 @@ const pollSchema = new Schema<IPoll>(
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: "User",
-		},
-		duration: {
-			type: Number,
-			required: true,
 		},
 		finishAt: {
 			type: Date,
