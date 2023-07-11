@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getTokenAuth } from "../helpers/localStorageManagement";
-// import Cookies from "universal-cookie";
 
 export const instanceBackend = axios.create({
 	baseURL: import.meta.env.VITE_BACKEND_URL,

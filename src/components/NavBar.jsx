@@ -17,9 +17,10 @@ const NavBar = () => {
 
 	const linksAuthenticatedUser = [
 		{ id: 1, name: "Create", link: "/create" },
-		{ id: 2, name: "History", link: "/history" },
+		{ id: 2, name: "Participate", link: "/answer" },
+		{ id: 3, name: "History", link: "/history" },
 		{
-			id: 3,
+			id: 4,
 			name: "Logout",
 			link: "/",
 			onClick: () => {

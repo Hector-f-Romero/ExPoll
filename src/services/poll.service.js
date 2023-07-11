@@ -16,4 +16,8 @@ const createPollService = async (data) => {
 	return await instanceBackend.post("/poll", data);
 };
 
-export { getPollService, getPollsByUserService, createPollService, getPollsAsParticipantService };
+const finishPollService = async (id) => {
+	return await instanceBackend.put(`/poll/finish/${id}`);
+};
+
+export { getPollService, getPollsByUserService, finishPollService, createPollService, getPollsAsParticipantService };

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
+import { getPollService } from "../services/poll.service";
+import { formatISODate } from "../helpers";
+
 const CountDown = ({ poll, setPoll }) => {
 	const [countDown, setCountDown] = useState("00:00");
 
@@ -14,10 +17,13 @@ const CountDown = ({ poll, setPoll }) => {
 		};
 
 		eventSource.addEventListener("finishPoll", (event) => {
-			// console.log("Evento personalizado");
-			setPoll({ ...poll, completed: true });
-			setCountDown(event.data);
-			// console.log(event.data);
+			const getUpdatedData = async () => {
+				const { data } = await getPollService(poll.id);
+				data.formattedFinishAt = formatISODate(data.finishAt);
+				setPoll(data);
+				setCountDown(event.data);
+			};
+			getUpdatedData();
 		});
 
 		eventSource.onerror = function () {

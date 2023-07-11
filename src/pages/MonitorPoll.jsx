@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 
-import { CountDown, MODAL_TYPES, NavBar, PollView, showModal, showQRModal } from "../components";
-import { getPollService } from "../services/poll.service";
+import { CountDown, MODAL_TYPES, NavBar, PollView, SpinnerLoading, showModal, showQRModal } from "../components";
+import { finishPollService, getPollService } from "../services/poll.service";
 import { formatISODate } from "../helpers/index.js";
 
 const MonitorPoll = () => {
@@ -23,8 +23,13 @@ const MonitorPoll = () => {
 		getDataBD();
 	}, []);
 
+	const finishPoll = async () => {
+		const res = await finishPollService(poll?.id);
+		console.log(res);
+	};
+
 	if (isLoading || poll === null) {
-		return <h1>Loading...</h1>;
+		return <SpinnerLoading />;
 	}
 
 	return (
@@ -79,7 +84,9 @@ const MonitorPoll = () => {
 							)}
 
 							<div className="flex justify-center items-center">
-								<button className="w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
+								<button
+									onClick={finishPoll}
+									className="w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
 									Finish
 								</button>
 							</div>
