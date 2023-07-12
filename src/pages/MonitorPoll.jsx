@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 
 import { CountDown, MODAL_TYPES, NavBar, PollView, SpinnerLoading, showModal, showQRModal } from "../components";
 import { finishPollService, getPollService } from "../services/poll.service";
 import { formatISODate } from "../helpers/index.js";
+import { UserContext } from "../context/UserContext";
 
 const MonitorPoll = () => {
+	const { user } = useContext(UserContext);
 	const [poll, setPoll] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const { id } = useParams();
@@ -15,9 +17,10 @@ const MonitorPoll = () => {
 		const getDataBD = async () => {
 			setIsLoading(true);
 			const { data } = await getPollService(id);
-			data.formattedFinishAt = formatISODate(data.finishAt);
-			console.log(data);
-			setPoll(data);
+			console.log(data.poll.finishAt);
+			data.poll.formattedFinishAt = formatISODate(data.poll.finishAt);
+			console.log(data.poll.formattedFinishAt);
+			setPoll(data.poll);
 			setIsLoading(false);
 		};
 		getDataBD();
@@ -26,6 +29,30 @@ const MonitorPoll = () => {
 	const finishPoll = async () => {
 		const res = await finishPollService(poll?.id);
 		console.log(res);
+	};
+
+	const showFinishButton = () => {
+		// 1. Verify if the user is logged in
+		console.log(user);
+		console.log(poll.createdBy._id);
+		if (user.id === "") {
+			return null;
+		}
+
+		// 2. Verify if the user is the creator of the poll
+		if (user.id !== poll.createdBy._id) {
+			return null;
+		}
+
+		return (
+			<div className="flex justify-center items-center">
+				<button
+					onClick={finishPoll}
+					className="w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
+					Finish
+				</button>
+			</div>
+		);
 	};
 
 	if (isLoading || poll === null) {
@@ -82,14 +109,7 @@ const MonitorPoll = () => {
 									</button>
 								</div>
 							)}
-
-							<div className="flex justify-center items-center">
-								<button
-									onClick={finishPoll}
-									className="w-2/4 px-4 py-2 sm:py-3 my-2 text-white font-medium sm:text-xl lg:text-2xl bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button rounded-lg duration-150">
-									Finish
-								</button>
-							</div>
+							{showFinishButton()}
 						</div>
 					</div>
 				</div>

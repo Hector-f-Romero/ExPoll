@@ -49,8 +49,8 @@ const PollView = ({ poll, setPoll }) => {
 
 	useEffect(() => {
 		const connectToPollRoom = () => {
-			console.log(`Conectado a ${poll.id}`);
-			console.log(socket);
+			// console.log(`Conectado a ${poll.id}`);
+			// console.log(socket);
 			socket.emit("link-poll", { id: poll.id });
 		};
 

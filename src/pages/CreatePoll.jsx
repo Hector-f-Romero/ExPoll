@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -5,9 +6,11 @@ import { MODAL_TYPES, showModal } from "../components/modals/Modals";
 import { useDurationPoll } from "../hooks/useDurationPoll";
 import { Input, NavBar } from "../components";
 import { createPollService } from "../services/poll.service";
+import { UserContext } from "../context/UserContext";
 
 const CreatePoll = () => {
 	const { durationPoll, formattedTime, handleChange } = useDurationPoll();
+	const { user } = useContext(UserContext);
 	const navigate = useNavigate();
 	const {
 		register,
@@ -53,8 +56,9 @@ const CreatePoll = () => {
 				confirmText: "Ok",
 			});
 			return;
+		} else {
+			append({ value: "" });
 		}
-		append({ value: "" });
 	};
 
 	const onSubmit = async (data) => {
@@ -69,11 +73,26 @@ const CreatePoll = () => {
 			return;
 		}
 
+		if (fields >= 6) {
+			await showModal({
+				title: "Respect the option limits",
+				text: "Your polls only have to maximum of six options",
+				type: MODAL_TYPES.WARNING,
+				confirmText: "Ok",
+			});
+			return;
+		}
+
 		data.options = data.options.map((option) => option.value);
-		// console.log(formattedOptions);
 		data.duration = durationPoll;
-		data.createdBy = import.meta.env.VITE_UNREGISTERED_CREATOR_USER_ID;
-		data.verified = false;
+		// Verify if the user has logged
+		if (user.id !== "") {
+			data.createdBy = user.id;
+			data.verified = true;
+		} else {
+			data.createdBy = `${import.meta.env.VITE_UNREGISTERED_CREATOR_USER_ID}`;
+			data.verified = false;
+		}
 
 		console.log(data);
 		try {
@@ -96,7 +115,7 @@ const CreatePoll = () => {
 		<>
 			<NavBar />
 
-			<article className="bg-[#111A21] text-white h-screen flex justify-center items-center overflow-auto">
+			<article className="bg-[#111A21] text-white h-screen flex justify-center items-center overflow-auto animate-fade-up animate-once animate-duration-1000 animate-delay-500 animate-ease-in-out">
 				<div className="bg-main-card rounded-lg w-5/6 sm:w-3/4 h-fit py-10 px-4 md:px-10 overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-slate-600 scrollbar-thumb-rounded">
 					<h1 className="text-2xl sm:text-4xl lg:text-5xl mb-5 font-semibold text-center text-white">
 						Create poll
@@ -141,6 +160,7 @@ const CreatePoll = () => {
 							<p className="font-medium text-sm md:text-xl">Available options</p>
 							<button
 								onClick={() => handleAddOption()}
+								type="button"
 								className=" inline-flex p-2 rounded items-center justify-center focus:shadow-outline  text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2">
 								<svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
 									<path

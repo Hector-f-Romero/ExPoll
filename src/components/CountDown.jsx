@@ -19,8 +19,8 @@ const CountDown = ({ poll, setPoll }) => {
 		eventSource.addEventListener("finishPoll", (event) => {
 			const getUpdatedData = async () => {
 				const { data } = await getPollService(poll.id);
-				data.formattedFinishAt = formatISODate(data.finishAt);
-				setPoll(data);
+				data.poll.formattedFinishAt = formatISODate(data.poll.finishAt);
+				setPoll(data.poll);
 				setCountDown(event.data);
 			};
 			getUpdatedData();

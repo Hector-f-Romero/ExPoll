@@ -13,11 +13,12 @@ const NavBar = () => {
 		{ id: 1, name: "Home", link: "/" },
 		{ id: 2, name: "Register", link: "/" },
 		{ id: 3, name: "Create", link: "/create" },
+		{ id: 4, name: "Vote", link: "/answer" },
 	];
 
 	const linksAuthenticatedUser = [
 		{ id: 1, name: "Create", link: "/create" },
-		{ id: 2, name: "Participate", link: "/answer" },
+		{ id: 2, name: "Vote", link: "/answer" },
 		{ id: 3, name: "History", link: "/history" },
 		{
 			id: 4,
