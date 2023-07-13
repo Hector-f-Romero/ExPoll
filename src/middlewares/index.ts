@@ -1,2 +1,3 @@
-export * from "./validateJWT.js";
-export * from "./validateRole.js";
+export * from "./validateJWT";
+export * from "./validateRole";
+export * from "./validationErrors";

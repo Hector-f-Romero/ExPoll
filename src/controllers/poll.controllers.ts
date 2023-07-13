@@ -19,7 +19,7 @@ const getPoll = async (req: Request, res: Response) => {
 			return res.status(404).json({ error: `Poll with id ${req.params.id} doesn't exist.` });
 		}
 
-		return res.json(poll);
+		return res.json({ poll });
 	} catch (error) {
 		return handleErrorHTTP(res, error, 500);
 	}
@@ -51,7 +51,6 @@ const getPollsAsParticipant = async (req: Request, res: Response) => {
 		const polls = await PollModel.find({
 			options: { $in: votedOptons.map((option) => option._id.toHexString()) },
 		}).populate([{ path: "options" }, { path: "createdBy" }]);
-
 		return res.json(polls);
 	} catch (error) {
 		return handleErrorHTTP(res, error, 500);
@@ -59,7 +58,7 @@ const getPollsAsParticipant = async (req: Request, res: Response) => {
 };
 
 const createPoll = async (req: Request, res: Response) => {
-	const { title, description, createdBy, duration, options } = req.body;
+	const { title, description, createdBy, verified, duration, options } = req.body;
 
 	// Create first the options in BD
 	const optionsMongo: object[] = [];
@@ -70,7 +69,7 @@ const createPoll = async (req: Request, res: Response) => {
 			optionsMongo.push(newOption._id);
 		})
 	);
-	const poll = new PollModel({ title, description, createdBy, options: optionsMongo });
+	const poll = new PollModel({ title, description, createdBy, verified, options: optionsMongo });
 
 	// First save the document to obtain the createdAt key. With this value, is possible to set the finishAt
 	await poll.save();
@@ -80,11 +79,20 @@ const createPoll = async (req: Request, res: Response) => {
 
 	// Update the document with the finish date of poll
 	const updatedPoll = await PollModel.findByIdAndUpdate(poll.id, { finishAt: finishAt }, { new: true });
-	return res.json({ msg: "Ok", poll: updatedPoll });
+	return res.json({ poll: updatedPoll });
 };
 
 const updatePoll = async (req: Request, res: Response) => {
 	const { title, description, createdBy, duration, completed, verified, options, finishAt } = req.body;
+
+	if (Object.keys(req.body).length === 0) {
+		return res.status(400).json({ error: "Request body empty." });
+	}
+
+	if (!title && !description && !createdBy && !duration && !completed && !verified && !options && !finishAt) {
+		return res.status(400).json({ error: "Invalid data in body." });
+	}
+
 	try {
 		const updatedPoll = await PollModel.findByIdAndUpdate(
 			req.params.id,
@@ -100,7 +108,7 @@ const updatePoll = async (req: Request, res: Response) => {
 			},
 			{ new: true }
 		);
-		return res.status(200).json({ updatedPoll });
+		return res.status(200).json({ poll: updatedPoll });
 	} catch (error) {
 		return handleErrorHTTP(res, error);
 	}

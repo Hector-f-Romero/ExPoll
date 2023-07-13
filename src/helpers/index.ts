@@ -1,3 +1,4 @@
-export * from "./errors.js";
-export * from "./handleError.js";
-export * from "./handleJWT.js";
+export * from "./errors";
+export * from "./handleError";
+export * from "./handleJWT";
+export * from "./validators";
