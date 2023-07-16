@@ -275,4 +275,42 @@ const updateUserValidation: Schema = {
 	},
 };
 
-export { createPollValidation, updatePollValidation, createUserValidation, updateUserValidation };
+const updateOptionValidation: Schema = {
+	option: {
+		isLength: {
+			options: {
+				min: 3,
+				max: 50,
+			},
+			errorMessage: "Option must be between 3 and 50 character.",
+		},
+		optional: true,
+	},
+	voters: {
+		isArray: {
+			errorMessage: "Voters must be an not empty array.",
+			options: {
+				min: 1,
+			},
+		},
+		custom: {
+			// Verify that don't exist repeated options
+			options: (value: string[]) => verifyDuplicatedValuesInArray(value),
+		},
+
+		optional: true,
+	},
+	"voters.*": {
+		isMongoId: {
+			errorMessage: "Invalid option id.",
+		},
+	},
+};
+
+export {
+	createPollValidation,
+	updatePollValidation,
+	createUserValidation,
+	updateUserValidation,
+	updateOptionValidation,
+};
