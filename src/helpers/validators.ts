@@ -151,4 +151,128 @@ const updatePollValidation: Schema = {
 	},
 };
 
-export { createPollValidation, updatePollValidation };
+const createUserValidation: Schema = {
+	names: {
+		notEmpty: {
+			errorMessage: "Names cannot be empty.",
+		},
+		isLength: {
+			options: {
+				min: 3,
+				max: 50,
+			},
+			errorMessage: "Names must be between 3 and 50 character.",
+		},
+	},
+	lastnames: {
+		notEmpty: {
+			errorMessage: "Lastnames cannot be empty.",
+		},
+		isLength: {
+			options: {
+				min: 3,
+				max: 50,
+			},
+			errorMessage: "Lastnames must be between 3 and 50 character.",
+		},
+	},
+	email: {
+		notEmpty: {
+			errorMessage: "Email cannot be empty.",
+		},
+		isEmail: { errorMessage: "Email not valid." },
+	},
+	password: {
+		notEmpty: {
+			errorMessage: "Password cannot be empty.",
+		},
+	},
+	confirmPassword: {
+		notEmpty: {
+			errorMessage: "Confirm password cannot be empty.",
+		},
+	},
+	role: {
+		notEmpty: {
+			errorMessage: "Role cannot be empty.",
+		},
+		isMongoId: {
+			errorMessage: "Invalid id.",
+		},
+	},
+	polls: {
+		isArray: {
+			bail: true,
+			errorMessage: "Polls attribute must be an array.",
+		},
+		custom: {
+			// Verify that don't exist repeated options
+			options: (value: string[]) => verifyDuplicatedValuesInArray(value),
+		},
+	},
+	"polls.*": {
+		isMongoId: {
+			errorMessage: "Invalid option id.",
+		},
+	},
+};
+
+const updateUserValidation: Schema = {
+	names: {
+		isLength: {
+			options: {
+				min: 3,
+				max: 50,
+			},
+			errorMessage: "Names must be between 3 and 50 character.",
+		},
+		optional: true,
+	},
+	lastnames: {
+		isLength: {
+			options: {
+				min: 3,
+				max: 50,
+			},
+			errorMessage: "Lastnames must be between 3 and 50 character.",
+		},
+		optional: true,
+	},
+	email: {
+		isEmail: { errorMessage: "Email not valid." },
+		optional: true,
+	},
+	password: {
+		notEmpty: {
+			errorMessage: "Password cannot be empty.",
+		},
+		optional: true,
+	},
+	confirmPassword: {
+		optional: true,
+	},
+	role: {
+		isMongoId: {
+			errorMessage: "Invalid id.",
+		},
+		optional: true,
+	},
+	polls: {
+		isArray: {
+			bail: true,
+			errorMessage: "Polls attribute must be an array.",
+		},
+		custom: {
+			// Verify that don't exist repeated options
+			options: (value: string[]) => verifyDuplicatedValuesInArray(value),
+		},
+		optional: true,
+	},
+	"polls.*": {
+		isMongoId: {
+			errorMessage: "Invalid option id.",
+		},
+	},
+};
+
+export { createPollValidation, updatePollValidation, createUserValidation, updateUserValidation };

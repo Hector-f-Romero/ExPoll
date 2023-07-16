@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { EventEmitter } from "events";
-import { PollModel, OptionModel, IPoll } from "../models/index.js";
+import { PollModel, OptionModel, IPoll, UserModel } from "../models/index.js";
 import { handleErrorHTTP } from "../helpers/handleError.js";
 import { NotFoundInBD } from "../helpers/errors.js";
 
@@ -21,7 +21,7 @@ const getPoll = async (req: Request, res: Response) => {
 
 		return res.json({ poll });
 	} catch (error) {
-		return handleErrorHTTP(res, error, 500);
+		return handleErrorHTTP(res, error);
 	}
 };
 
@@ -38,7 +38,7 @@ const getPollsByUser = async (req: Request, res: Response) => {
 
 		return res.json(polls);
 	} catch (error) {
-		return handleErrorHTTP(res, error, 500);
+		return handleErrorHTTP(res, error);
 	}
 };
 
@@ -53,33 +53,49 @@ const getPollsAsParticipant = async (req: Request, res: Response) => {
 		}).populate([{ path: "options" }, { path: "createdBy" }]);
 		return res.json(polls);
 	} catch (error) {
-		return handleErrorHTTP(res, error, 500);
+		return handleErrorHTTP(res, error);
 	}
 };
 
 const createPoll = async (req: Request, res: Response) => {
-	const { title, description, createdBy, verified, duration, options } = req.body;
+	try {
+		const { title, description, createdBy, verified, duration, options } = req.body;
 
-	// Create first the options in BD
-	const optionsMongo: object[] = [];
-	await Promise.all(
-		options.map(async (option: object) => {
-			const newOption = new OptionModel({ option: option });
-			await newOption.save();
-			optionsMongo.push(newOption._id);
-		})
-	);
-	const poll = new PollModel({ title, description, createdBy, verified, options: optionsMongo });
+		// 1. Rectify that the creator of poll exist
+		const user = await UserModel.findById(createdBy);
 
-	// First save the document to obtain the createdAt key. With this value, is possible to set the finishAt
-	await poll.save();
-	const createdAt = new Date(poll.createdAt);
-	createdAt.setSeconds(createdAt.getSeconds() + Number(duration));
-	const finishAt = createdAt.toISOString();
+		if (!user) {
+			throw new NotFoundInBD("Creator id doesn't exist in BD.");
+		}
 
-	// Update the document with the finish date of poll
-	const updatedPoll = await PollModel.findByIdAndUpdate(poll.id, { finishAt: finishAt }, { new: true });
-	return res.json({ poll: updatedPoll });
+		// 2. Create the options in BD first.
+		const optionsMongo: object[] = [];
+		await Promise.all(
+			options.map(async (option: object) => {
+				const newOption = new OptionModel({ option: option });
+				await newOption.save();
+				optionsMongo.push(newOption._id);
+			})
+		);
+		const poll = new PollModel({ title, description, createdBy, verified, options: optionsMongo });
+
+		// 3. First save the document to obtain the createdAt key. With this value, is possible to set the finishAt
+		await poll.save();
+		const createdAt = new Date(poll.createdAt);
+		createdAt.setSeconds(createdAt.getSeconds() + Number(duration));
+		const finishAt = createdAt.toISOString();
+
+		// 4. Update the document with the finish date of poll
+		const updatedPoll = await PollModel.findByIdAndUpdate(poll.id, { finishAt: finishAt }, { new: true });
+
+		// 5. Link poll to user
+		user.polls?.push(poll.id);
+		await user.save();
+
+		return res.json({ poll: updatedPoll });
+	} catch (error) {
+		return handleErrorHTTP(res, error);
+	}
 };
 
 const updatePoll = async (req: Request, res: Response) => {
@@ -119,7 +135,7 @@ const deletePoll = async (req: Request, res: Response) => {
 		await PollModel.findByIdAndDelete(req.params.id);
 		return res.status(204).json();
 	} catch (error) {
-		return handleErrorHTTP(res, error, 500);
+		return handleErrorHTTP(res, error);
 	}
 };
 

@@ -2,7 +2,7 @@ import { Response } from "express";
 import { MongoServerError } from "mongodb";
 import { AlreadyExistInBD, NotFoundAuthToken, NotFoundInBD, UserWithoutPermits } from "./index.js";
 
-export const handleErrorHTTP = (res: Response, error: unknown, HTTPCode?: number, customErrorMessage?: string) => {
+export const handleErrorHTTP = (res: Response, error: unknown, customErrorMessage?: string) => {
 	let errorMessage = "";
 	// console.log(error);
 
