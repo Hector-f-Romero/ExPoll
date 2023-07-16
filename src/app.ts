@@ -5,12 +5,8 @@ import cors from "cors";
 import "dotenv/config";
 
 import { connectDB } from "./db/mongo.config.js";
-import pollRoutes from "./routes/poll.routes.js";
-import userRoutes from "./routes/user.routes.js";
-import optionRoutes from "./routes/option.routes.js";
-import authRoutes from "./routes/auth.routes.js";
 import { socketController } from "./sockets/index.js";
-import { roleRouter } from "./routes/role.routes.js";
+import { authRouter, optionRouter, pollRouter, roleRouter, userRouter } from "./routes";
 
 // Initialize the server config
 const app = express();
@@ -29,10 +25,10 @@ connectDB();
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
-app.use("/api/v1/poll", pollRoutes);
-app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/option", optionRoutes);
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/poll", pollRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/option", optionRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/role", roleRouter);
 
 httpServer.listen(PORT, () => console.log(`Server running on port ${PORT} 🔥`));

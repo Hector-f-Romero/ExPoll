@@ -8,10 +8,10 @@ import { RolesAvailableInDB } from "../models/role.model.js";
 import { validateRequestFields } from "../middlewares/validationErrors.js";
 import { createUserValidation, updateUserValidation } from "../helpers/validators.js";
 
-const router = Router();
+export const userRouter = Router();
 
-router.get("/", [validateJWT, validateRoles([RolesAvailableInDB.ADMIN, RolesAvailableInDB.USER])], getUsers);
-router.get(
+userRouter.get("/", [validateJWT, validateRoles([RolesAvailableInDB.ADMIN, RolesAvailableInDB.USER])], getUsers);
+userRouter.get(
 	"/:id",
 	[
 		check("id").isMongoId().withMessage("Invalid poll id"),
@@ -21,8 +21,8 @@ router.get(
 	],
 	getUser
 );
-router.post("/", checkSchema(createUserValidation), validateRequestFields, createUser);
-router.put(
+userRouter.post("/", checkSchema(createUserValidation), validateRequestFields, createUser);
+userRouter.put(
 	"/:id",
 	checkSchema(updateUserValidation),
 	[
@@ -33,7 +33,7 @@ router.put(
 	],
 	updatePoll
 );
-router.delete(
+userRouter.delete(
 	"/:id",
 	[
 		check("id").isMongoId().withMessage("Invalid poll id"),
@@ -43,5 +43,3 @@ router.delete(
 	],
 	deleteUser
 );
-
-export default router;

@@ -4,13 +4,11 @@ import { loginUser, revalidateToken } from "../controllers";
 import { validateJWT, validateRoles } from "../middlewares";
 import { RolesAvailableInDB } from "../models";
 
-const router = Router();
+export const authRouter = Router();
 
-router.get(
+authRouter.get(
 	"/renew",
 	[validateJWT, validateRoles([RolesAvailableInDB.ADMIN, RolesAvailableInDB.USER])],
 	revalidateToken
 );
-router.post("/login", loginUser);
-
-export default router;
+authRouter.post("/login", loginUser);

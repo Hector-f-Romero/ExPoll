@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { addVoteUnregisteredToPoll } from "../controllers/index.js";
 
-const router = Router();
+export const optionRouter = Router();
 
-router.post("/vote/unregistered/:id", addVoteUnregisteredToPoll);
-
-export default router;
+optionRouter.post("/vote/unregistered/:id", addVoteUnregisteredToPoll);

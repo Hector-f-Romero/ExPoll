@@ -16,27 +16,27 @@ import { validateJWT, validateRequestFields, validateRoles } from "../middleware
 import { RolesAvailableInDB } from "../models";
 import { createPollValidation, updatePollValidation } from "../helpers";
 
-const router = Router();
+export const pollRouter = Router();
 
-router.get("/", getPolls);
-router.get("/:id", [check("id").isMongoId().withMessage("Invalid poll id"), validateRequestFields], getPoll);
-router.get(
+pollRouter.get("/", getPolls);
+pollRouter.get("/:id", [check("id").isMongoId().withMessage("Invalid poll id"), validateRequestFields], getPoll);
+pollRouter.get(
 	"/user/:id",
 	[check("id").isMongoId().withMessage("Invalid poll id"), validateRequestFields],
 	getPollsByUser
 );
-router.get(
+pollRouter.get(
 	"/participant/:id",
 	[check("id").isMongoId().withMessage("Invalid poll id"), validateRequestFields],
 	getPollsAsParticipant
 );
-router.get(
+pollRouter.get(
 	"/duration/:id",
 	[check("id").isMongoId().withMessage("Invalid poll id"), validateRequestFields],
 	controlDurationPoll
 );
-router.post("/", checkSchema(createPollValidation), validateRequestFields, createPoll);
-router.put(
+pollRouter.post("/", checkSchema(createPollValidation), validateRequestFields, createPoll);
+pollRouter.put(
 	"/:id",
 	checkSchema(updatePollValidation),
 	[
@@ -48,8 +48,8 @@ router.put(
 
 	updatePoll
 );
-router.put("/finish/:id", finishPoll);
-router.delete(
+pollRouter.put("/finish/:id", finishPoll);
+pollRouter.delete(
 	"/:id",
 	[
 		check("id").isMongoId().withMessage("Invalid poll id"),
@@ -59,5 +59,3 @@ router.delete(
 	],
 	deletePoll
 );
-
-export default router;
