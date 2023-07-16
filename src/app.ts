@@ -10,6 +10,7 @@ import userRoutes from "./routes/user.routes.js";
 import optionRoutes from "./routes/option.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import { socketController } from "./sockets/index.js";
+import { roleRouter } from "./routes/role.routes.js";
 
 // Initialize the server config
 const app = express();
@@ -32,5 +33,6 @@ app.use("/api/v1/poll", pollRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/option", optionRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/role", roleRouter);
 
 httpServer.listen(PORT, () => console.log(`Server running on port ${PORT} 🔥`));
