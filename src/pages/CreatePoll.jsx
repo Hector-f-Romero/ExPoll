@@ -128,7 +128,7 @@ const CreatePoll = () => {
 							name="title"
 							required={{ value: true, message: "Poll title is required." }}
 							minLength={{ value: 3, message: "Poll title must be between 3 and 10 character." }}
-							maxLength={{ value: 30, message: "Poll title must be between 3 and 30 character." }}
+							maxLength={{ value: 50, message: "Poll title must be between 3 and 50 character." }}
 							register={register}
 							errors={errors.title}
 						/>
@@ -180,8 +180,8 @@ const CreatePoll = () => {
 										type="text"
 										name={`options.${index}.value`}
 										required={{ value: true, message: "Option cannot be empty." }}
-										minLength={{ value: 3, message: "Option must be between 3 and 10 character." }}
-										maxLength={{ value: 30, message: "Option must be between 3 and 30 character." }}
+										minLength={{ value: 3, message: "Option must be between 3 and 50 character." }}
+										maxLength={{ value: 50, message: "Option must be between 3 and 50 character." }}
 										register={register}
 										errors={errors.options?.[index]?.value}
 									/>

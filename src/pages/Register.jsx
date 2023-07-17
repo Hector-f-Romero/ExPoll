@@ -38,8 +38,8 @@ const Register = () => {
 	return (
 		<>
 			<NavBar />
-			<article className="bg-[#111A21] h-screen flex justify-center items-center overflow-auto">
-				<div className="bg-main-card rounded-lg w-5/6 sm:w-3/4 h-fit py-10 px-4 md:px-10 overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-slate-600 scrollbar-thumb-rounded">
+			<article className="bg-[#111A21] h-screen flex justify-center items-center overflow-auto animate-fade-up animate-once animate-duration-1000 animate-delay-500 animate-ease-in-out">
+				<div className="bg-main-card mt-[10vh] rounded-lg w-5/6 sm:w-3/4 h-fit py-10 px-4 md:px-10 overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-slate-600 scrollbar-thumb-rounded">
 					<h1 className="text-2xl sm:text-4xl lg:text-5xl mb-5 font-semibold text-center">
 						Register your data
 					</h1>

@@ -17,6 +17,7 @@ const MonitorPoll = () => {
 		const getDataBD = async () => {
 			setIsLoading(true);
 			const { data } = await getPollService(id);
+			console.log(data);
 			data.poll.formattedFinishAt = formatISODate(data.poll.finishAt);
 			setPoll(data.poll);
 			setIsLoading(false);
@@ -73,7 +74,12 @@ const MonitorPoll = () => {
 							<CountDown poll={poll} setPoll={setPoll} />
 							<p className="text-2xl sm:text-3xl lg:text-4xl my-5 font-medium">{poll?.title}</p>
 							<p className="my-2 text-base lg:text-base font-normal">{poll?.description}</p>
-							<p className="my-2 text-base lg:text-base font-normal">Created by: Test1</p>
+							<p className="my-2 text-base lg:text-base font-normal">
+								Created by:{" "}
+								{poll?.createdBy?.names === "Unregistered"
+									? "Unregistered user"
+									: `${poll?.createdBy?.names} ${poll?.createdBy?.lastnames}`}
+							</p>
 							<p className="my-2 text-base lg:text-base font-normal">
 								Ends at: {poll?.formattedFinishAt}
 							</p>
@@ -84,7 +90,7 @@ const MonitorPoll = () => {
 										Vote with this QR code
 									</p>
 									<div
-										className="flex flex-col items-center justify-center"
+										className="flex flex-col items-center justify-center cursor-pointer"
 										onClick={async () =>
 											await showQRModal(
 												`${import.meta.env.VITE_FRONTEND_URL}/answer/poll/${poll?.id}`

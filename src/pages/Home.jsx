@@ -137,6 +137,12 @@ const Home = () => {
 							Log in
 						</button>
 					</form>
+					<h2 className="text-xs sm:text-sm lg:text-base mb-5 font-light text-center text-white">
+						Don&apos;t have an account?{" "}
+						<span onClick={() => navigate("/register")} className="font-semibold cursor-pointer">
+							Sign up here
+						</span>
+					</h2>
 				</div>
 			</div>
 		</>
