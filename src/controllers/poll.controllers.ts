@@ -13,7 +13,15 @@ const getPolls = async (req: Request, res: Response) => {
 
 const getPoll = async (req: Request, res: Response) => {
 	try {
-		const poll = await PollModel.findById(req.params.id).populate([{ path: "options" }, { path: "createdBy" }]);
+		const poll = await PollModel.findById(req.params.id).populate([
+			{
+				path: "options",
+				populate: {
+					path: "voters",
+				},
+			},
+			{ path: "createdBy" },
+		]);
 
 		if (!poll) {
 			return res.status(404).json({ error: `Poll with id ${req.params.id} doesn't exist.` });

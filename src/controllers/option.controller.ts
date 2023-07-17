@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { OptionModel, UserModel } from "../models/index.js";
+import { OptionModel, PollModel, RolesAvailableInDB, UserModel } from "../models/index.js";
 import { handleErrorHTTP } from "../helpers/handleError.js";
 import { AlreadyExistInBD, NotFoundInBD } from "../helpers/errors.js";
 
@@ -49,7 +49,6 @@ const updateOption = async (req: Request, res: Response) => {
 
 	try {
 		const updatedOption = await OptionModel.findByIdAndUpdate(req.params.id, { option, voters }, { new: true });
-		console.log(updateOption);
 		return res.json({ option: updatedOption });
 	} catch (error) {
 		return handleErrorHTTP(res, error);
@@ -72,37 +71,50 @@ const deleteOption = async (req: Request, res: Response) => {
 };
 
 const addVoteUnregisteredToPoll = async (req: Request, res: Response) => {
-	const { option, idVoter } = req.body;
-
-	console.log(req.params.id);
-
 	try {
+		const { option, idVoter } = req.body;
+
 		const user = await UserModel.findById(idVoter);
 
+		// Know if the user exists in DB.
 		if (!user) {
 			throw new NotFoundInBD(`Don't exist user with id ${idVoter}`);
 		}
 
-		const optionBD = await OptionModel.findById(option);
+		// Prove if the option exist in DB.
+		const optionDB = await OptionModel.findById(option);
 
-		if (!optionBD) {
+		if (!optionDB) {
 			throw new NotFoundInBD(`Don't exist option with id ${option}`);
 		}
 
+		// Confirm that the option belong to a poll and exist
+		const pollDB = await PollModel.findById(req.params.id);
+		if (!pollDB) {
+			throw new NotFoundInBD(`Don't exist poll related with the option id ${option}`);
+		}
+
+		// Check if the poll already has finished
+		const currentDate = new Date();
+
+		if (currentDate.valueOf() > pollDB.finishAt.valueOf()) {
+			return res.status(409).json({ error: "The poll already has finished." });
+		}
+
 		// Verify that user hasn't vote twice or more
-		// console.log(optionBD.voters);
-		// const userAlreadyHasVoted = optionBD.voters.includes(user._id);
-		// console.log(userAlreadyHasVoted);
-		// console.log(user);
+		const userAlreadyHasVoted = optionDB.voters.includes(user._id);
 
-		// if (userAlreadyHasVoted) {
-		// 	throw new AlreadyExistInBD(`User with id ${req.params.id} already has voted in this poll.`);
-		// }
+		// The poll only can allow multiple votes from unregistered user.
+		if (userAlreadyHasVoted) {
+			if (user.role.toHexString() !== RolesAvailableInDB.UNREGISTERED) {
+				throw new AlreadyExistInBD(`User with id ${user.id} already has voted in this poll.`);
+			}
+		}
 
-		optionBD.voters.push(user._id);
-		await optionBD.save();
+		optionDB.voters.push(user._id);
+		await optionDB.save();
 
-		res.json({ optionBD, msg: "Vote saved successfully" });
+		return res.status(201).json({ optionBD: optionDB });
 	} catch (error) {
 		handleErrorHTTP(res, error);
 	}

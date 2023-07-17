@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { IUser } from "./user.model";
 
-export interface IOption {
+export interface IOption extends Document {
 	option: string;
 	voters: IUser[];
 }

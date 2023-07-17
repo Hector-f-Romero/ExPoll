@@ -72,7 +72,7 @@ const createPollValidation: Schema = {
 		},
 	},
 	"options.*": {
-		isMongoId: {
+		isString: {
 			errorMessage: "Invalid option id.",
 		},
 	},
