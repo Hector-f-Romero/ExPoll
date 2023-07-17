@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { FiAlignJustify, FiX } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { UserContext } from "../context/UserContext";
 import { removeGetTokenAuth } from "../helpers/localStorageManagement";
@@ -8,6 +8,7 @@ import { removeGetTokenAuth } from "../helpers/localStorageManagement";
 const NavBar = () => {
 	const [open, setOpen] = useState(false);
 	const { user, clearData } = useContext(UserContext);
+	const navigate = useNavigate();
 
 	const linksNoAuthenticatedUser = [
 		{ id: 1, name: "Home", link: "/" },
@@ -18,11 +19,12 @@ const NavBar = () => {
 	];
 
 	const linksAuthenticatedUser = [
-		{ id: 1, name: "Create", link: "/create" },
-		{ id: 2, name: "Vote", link: "/answer" },
-		{ id: 3, name: "History", link: "/history" },
+		{ id: 1, name: "Home", link: "/" },
+		{ id: 2, name: "Create", link: "/create" },
+		{ id: 3, name: "Vote", link: "/answer" },
+		{ id: 4, name: "History", link: "/history" },
 		{
-			id: 4,
+			id: 5,
 			name: "Logout",
 			link: "/",
 			onClick: () => {
@@ -60,7 +62,11 @@ const NavBar = () => {
 		<header>
 			<nav className="shadow-md w-full top-0 left-0 fixed z-50">
 				<div className="md:flex items-center justify-between bg-[#243140] py-4 md:px-10 px-7 ">
-					<span className="font-bold text-2xl cursor-pointer flex items-center gap-1">ExPoll</span>
+					<span
+						onClick={() => navigate("/")}
+						className="font-bold text-2xl cursor-pointer flex items-center gap-1">
+						ExPoll
+					</span>
 					<div
 						onClick={() => setOpen(!open)}
 						className="absolute right-8 top-6 cursor-pointer md:hidden w-7 h-7">
