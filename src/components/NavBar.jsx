@@ -12,8 +12,9 @@ const NavBar = () => {
 	const linksNoAuthenticatedUser = [
 		{ id: 1, name: "Home", link: "/" },
 		{ id: 2, name: "Register", link: "/" },
-		{ id: 3, name: "Create", link: "/create" },
+		{ id: 3, name: "Log in", link: "/" },
 		{ id: 4, name: "Vote", link: "/answer" },
+		{ id: 5, name: "Create", link: "/create" },
 	];
 
 	const linksAuthenticatedUser = [

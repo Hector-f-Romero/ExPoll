@@ -10,6 +10,7 @@ import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
 
 const socket = io(import.meta.env.VITE_BACKEND_SOCKET_URL);
+let canVote = true;
 
 const AnswerPoll = () => {
 	const [poll, setPoll] = useState(null);
@@ -23,6 +24,15 @@ const AnswerPoll = () => {
 		const getDatBD = async () => {
 			setIsLoading(true);
 			const { data } = await getPollService(id);
+			console.log(data.poll.options);
+			data.poll.options.forEach((option) => {
+				const userAlreadyVoted = option.voters.find((voter) => voter._id === user.id);
+				if (userAlreadyVoted && user.id !== import.meta.env.VITE_UNREGISTERED_VOTER_USER_ID) {
+					console.log("Usuario ya votó");
+					canVote = false;
+				}
+			});
+			console.log(user);
 			setPoll(data.poll);
 			setIsLoading(false);
 		};
@@ -37,9 +47,8 @@ const AnswerPoll = () => {
 		data.idVoter = user.id !== "" ? user.id : `${import.meta.env.VITE_UNREGISTERED_CREATOR_USER_ID}`;
 		data.pollId = poll.id;
 		const res = await voteOptionService(data);
-		console.log(`Id del poll: ${poll.id}`);
 		socket.emit("vote", { id: poll.id });
-		if (res.status === 200) {
+		if (res.status === 201) {
 			await showModal({
 				title: "Vote sent",
 				text: "Your vote has been saved successfully",
@@ -83,9 +92,9 @@ const AnswerPoll = () => {
 						<div className="flex justify-center items-center">
 							<button
 								type="submit"
-								disabled={poll?.completed}
+								disabled={poll?.completed || canVote == false ? true : false}
 								className={`w-3/4 px-4 py-2 my-2 text-white font-medium ${
-									poll?.completed
+									poll?.completed || canVote === false
 										? "bg-slate-700 cursor-not-allowed"
 										: "bg-primary-button hover:bg-hover-primary-button active:bg-hover-primary-button"
 								}   rounded-lg duration-150`}>

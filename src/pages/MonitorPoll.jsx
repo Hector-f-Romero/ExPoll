@@ -17,9 +17,7 @@ const MonitorPoll = () => {
 		const getDataBD = async () => {
 			setIsLoading(true);
 			const { data } = await getPollService(id);
-			console.log(data.poll.finishAt);
 			data.poll.formattedFinishAt = formatISODate(data.poll.finishAt);
-			console.log(data.poll.formattedFinishAt);
 			setPoll(data.poll);
 			setIsLoading(false);
 		};
@@ -32,15 +30,17 @@ const MonitorPoll = () => {
 	};
 
 	const showFinishButton = () => {
-		// 1. Verify if the user is logged in
-		console.log(user);
-		console.log(poll.createdBy._id);
+		// 1. Verify if the user is the creator of the poll
+		if (user.id !== poll.createdBy._id) {
+			return null;
+		}
+
+		// 2. Verify if the user is logged in
 		if (user.id === "") {
 			return null;
 		}
 
-		// 2. Verify if the user is the creator of the poll
-		if (user.id !== poll.createdBy._id) {
+		if (poll.completed) {
 			return null;
 		}
 

@@ -14,10 +14,8 @@ const Home = () => {
 	const navigate = useNavigate();
 
 	const onSubmitWithoutAuth = async (data) => {
-		console.log(data);
 		try {
 			const res = await getPollService(data.poll);
-			console.log(res);
 			navigate(`/answer/poll/${res.data.poll.id}`);
 		} catch (error) {
 			console.log(error);
