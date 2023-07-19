@@ -7,6 +7,7 @@ Create real time polls in few steps supported for pc, mobile and another devices
 -   🧠 [Getting Started](#getting-started)
 -   ⚙ [Build with](#built-with)
 -   🎯 [Main challenges](#main-challenges)
+-   📺 [Preview](#preview)
 -   📚 [Documentation](#documentation)
 
 # Getting Started
@@ -68,6 +69,14 @@ However, keeping authentication and authorization information on the client side
 ## Organize the README
 
 For this first documented project, I have been looking many repositories to question what sections are important to put in this file and which not.
+
+# Preview
+
+https://github.com/Hector-f-Romero/ExPoll/assets/97544924/b0450fd5-8dc1-43ac-8805-f8397cd69234
+
+https://github.com/Hector-f-Romero/ExPoll/assets/97544924/77cd9c14-0cc5-43b6-a570-c0b61e01129c
+
+To see more videos about the functioning of ExPoll, check this [drive folder](https://drive.google.com/drive/folders/1dl4-nUlwInXRf6gRXRejmJXgURfEcYZe?usp=sharing).
 
 # Documentation
 
