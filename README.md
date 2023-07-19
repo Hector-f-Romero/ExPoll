@@ -7,6 +7,7 @@ Create real time polls in few steps supported for pc, mobile and another devices
 -   🧠 [Getting Started](#getting-started)
 -   ⚙ [Build with](#built-with)
 -   🎯 [Main challenges](#main-challenges)
+-   📺 [Preview](#preview)
 -   📚 [Documentation](#documentation)
 
 # Getting Started
@@ -71,7 +72,9 @@ For this first documented project, I have been looking many repositories to ques
 
 # Preview
 
-![Preview of voting system](https://drive.google.com/file/d/1VmKuEyACnMjtAGPlLzMZNPLQuI2WuJb0/view?usp=sharing)
+https://github.com/Hector-f-Romero/ExPoll/assets/97544924/b0450fd5-8dc1-43ac-8805-f8397cd69234
+
+https://github.com/Hector-f-Romero/ExPoll/assets/97544924/77cd9c14-0cc5-43b6-a570-c0b61e01129c
 
 # Documentation
 
