@@ -69,6 +69,10 @@ However, keeping authentication and authorization information on the client side
 
 For this first documented project, I have been looking many repositories to question what sections are important to put in this file and which not.
 
+# Preview
+
+![Preview of voting system](https://drive.google.com/file/d/1VmKuEyACnMjtAGPlLzMZNPLQuI2WuJb0/view?usp=sharing)
+
 # Documentation
 
 To expand knowledges about the process of planning and requirements of the application, check the next links:
