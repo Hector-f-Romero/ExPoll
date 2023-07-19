@@ -76,6 +76,8 @@ https://github.com/Hector-f-Romero/ExPoll/assets/97544924/b0450fd5-8dc1-43ac-880
 
 https://github.com/Hector-f-Romero/ExPoll/assets/97544924/77cd9c14-0cc5-43b6-a570-c0b61e01129c
 
+To see more videos about the functioning of ExPoll, check this [drive folder](https://drive.google.com/drive/folders/1dl4-nUlwInXRf6gRXRejmJXgURfEcYZe?usp=sharing).
+
 # Documentation
 
 To expand knowledges about the process of planning and requirements of the application, check the next links:
